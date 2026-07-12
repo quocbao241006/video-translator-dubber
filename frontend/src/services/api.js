@@ -46,7 +46,7 @@ class ApiService {
 
   async cleanup() {
     const res = await fetch(`${API_BASE}/cleanup`, { method: 'DELETE' });
-    if (!res.ok) throw new Error(`Cleanup failed: ${res.statusText}`);
+    if (!res.ok) throw new Error(`Cleanup failed: ${res.status}`);
     return res.json();
   }
 
