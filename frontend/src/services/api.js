@@ -1,4 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const _RAW_API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = _RAW_API.replace(/\/+$/, '');
 const API_BASE = `${API_URL}/api/v1`;
 
 class ApiService {
