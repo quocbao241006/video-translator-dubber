@@ -5,8 +5,9 @@ services:
     build: 
       context: ./backend
     container_name: vietdub_backend
+    user: "root"
     ports:
-      - "8000:8000"
+      - "8000:7860"
     env_file:
       - ./backend/.env
     volumes:

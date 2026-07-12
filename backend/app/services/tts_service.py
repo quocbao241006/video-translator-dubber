@@ -42,11 +42,15 @@ def process_audio_sync(raw_path: str, final_path: str, target_duration: float):
         atempo = min(ratio, 1.35)
         
         if atempo > 1.05:
-            subprocess.run([
-                'ffmpeg', '-y', '-i', trimmed_path,
-                '-filter:a', f'atempo={atempo:.3f}',
-                final_path
-            ], capture_output=True)
+            try:
+                subprocess.run([
+                    'ffmpeg', '-y', '-i', trimmed_path,
+                    '-filter:a', f'atempo={atempo:.3f}',
+                    final_path
+                ], capture_output=True, check=True)
+            except subprocess.CalledProcessError as e:
+                print(f"FFmpeg atempo error: {e.stderr}")
+                trimmed.export(final_path, format='mp3') # Fallback to original speed
         else:
             trimmed.export(final_path, format='mp3')
     else:

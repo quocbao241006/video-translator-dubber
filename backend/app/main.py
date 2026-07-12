@@ -1,14 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from dotenv import load_dotenv
+
 from pathlib import Path
 import os
 
 from app.routes import upload, jobs, process, srt, download
 from app.websocket import websocket_endpoint
+from app.services.cleanup import cleanup_loop
+import asyncio
 
-load_dotenv()
 
 app = FastAPI(
     title='VietDub Studio API',
@@ -37,9 +38,12 @@ app.websocket('/ws/progress/{job_id}')(websocket_endpoint)
 
 # Create storage directories on startup
 @app.on_event('startup')
-def startup():
+async def startup():
     for d in ['storage/uploads', 'storage/processing', 'storage/outputs']:
         Path(d).mkdir(parents=True, exist_ok=True)
+    
+    # Start cleanup background task
+    asyncio.create_task(cleanup_loop())
 
 
 # Mount storage for static file access
