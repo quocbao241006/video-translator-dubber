@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import useProjectStore from '../../store/projectStore';
 import VideoPlayer from '../video/VideoPlayer';
+import toast from 'react-hot-toast';
+import { Scissors, Combine, Download, Upload, Play, Edit3, Trash2, ArrowLeft, ArrowRight, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const formatTime = (s) => {
   const m = Math.floor(s / 60);
@@ -75,6 +77,7 @@ function Step4ReviewSRT() {
     if (window.confirm(`Xóa đoạn #${seg.index}?`)) {
       deleteSegment(seg.id);
       if (activeId === seg.id) setActiveId(null);
+      toast.success(`Đã xóa đoạn #${seg.index}`);
     }
   };
 
@@ -168,7 +171,7 @@ function Step4ReviewSRT() {
       <div className="panel-tools">
         <div className="panel-tools-header">
           <span className="panel-tools-title">
-            📝 Chỉnh sửa phụ đề
+            <FileText size={20} className="text-purple-400" /> Chỉnh sửa phụ đề
           </span>
           <span className="badge badge-info">{segments.length} đoạn</span>
         </div>
@@ -176,13 +179,13 @@ function Step4ReviewSRT() {
         <div style={{ padding: 'var(--space-sm) var(--space-lg)' }}>
           <div className="srt-toolbar">
             <button className="btn btn-ghost btn-sm" onClick={handleSplit} disabled={!activeId} title="Tách đoạn">
-              ✂️ Tách
+              <Scissors size={14} /> Tách
             </button>
             <button className="btn btn-ghost btn-sm" onClick={handleMerge} disabled={!activeId} title="Gộp với đoạn kế">
-              🔗 Gộp
+              <Combine size={14} /> Gộp
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <button className="btn btn-ghost btn-sm" onClick={() => handleShift(-1)}>◀</button>
+              <button className="btn btn-ghost btn-sm" onClick={() => handleShift(-1)}><ChevronLeft size={16} /></button>
               <input
                 type="number"
                 className="input"
@@ -191,14 +194,14 @@ function Step4ReviewSRT() {
                 style={{ width: 60, padding: '4px 6px', fontSize: 'var(--font-xs)', textAlign: 'center' }}
               />
               <span style={{ fontSize: 'var(--font-xs)', color: 'var(--text-muted)' }}>ms</span>
-              <button className="btn btn-ghost btn-sm" onClick={() => handleShift(1)}>▶</button>
+              <button className="btn btn-ghost btn-sm" onClick={() => handleShift(1)}><ChevronRight size={16} /></button>
             </div>
             <button className="btn btn-ghost btn-sm" onClick={() => fileInputRef.current?.click()}>
-              📥 Nhập SRT
+              <Upload size={14} /> Nhập
             </button>
             <input ref={fileInputRef} type="file" accept=".srt" onChange={handleImportSRT} style={{ display: 'none' }} />
             <button className="btn btn-ghost btn-sm" onClick={handleExportSRT}>
-              📤 Xuất SRT
+              <Download size={14} /> Xuất
             </button>
           </div>
         </div>
@@ -220,13 +223,13 @@ function Step4ReviewSRT() {
                   </div>
                   <div className="srt-segment-actions">
                     <button className="btn btn-ghost btn-icon btn-sm" onClick={(e) => handlePlaySegment(seg, e)} title="Play">
-                      ▶
+                      <Play size={14} className="text-blue-400" />
                     </button>
                     <button className="btn btn-ghost btn-icon btn-sm" onClick={(e) => handleEdit(seg, e)} title="Edit">
-                      ✏️
+                      <Edit3 size={14} />
                     </button>
                     <button className="btn btn-ghost btn-icon btn-sm" onClick={(e) => handleDelete(seg, e)} title="Delete">
-                      🗑️
+                      <Trash2 size={14} className="text-error" />
                     </button>
                   </div>
                 </div>
@@ -265,7 +268,7 @@ function Step4ReviewSRT() {
 
             {segments.length === 0 && (
               <div className="processing-status">
-                <div style={{ fontSize: 32 }}>📝</div>
+                <FileText size={48} className="text-purple-400 mb-2 opacity-50" />
                 <div className="processing-text">Chưa có phụ đề</div>
                 <div className="processing-detail">Hãy chạy STT ở bước 3 hoặc nhập file SRT</div>
               </div>
@@ -275,7 +278,7 @@ function Step4ReviewSRT() {
 
         <div style={{ padding: 'var(--space-md) var(--space-lg)', borderTop: '1px solid var(--border-subtle)' }}>
           <button className="btn btn-secondary" onClick={handleExportSRT} style={{ width: '100%' }}>
-            📤 Xuất file SRT
+            <Download size={16} /> Xuất file SRT
           </button>
         </div>
       </div>

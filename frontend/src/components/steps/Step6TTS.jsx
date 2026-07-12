@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import useProjectStore from '../../store/projectStore';
 import api from '../../services/api';
 import VideoPlayer from '../video/VideoPlayer';
+import toast from 'react-hot-toast';
+import { Mic2, Sliders, Settings, Play, Pause, Volume2, Clapperboard, Music, RefreshCw, Upload, CheckCircle2, List } from 'lucide-react';
 
 function Step6TTS() {
   const videoUrl = useProjectStore((s) => s.videoUrl);
@@ -12,10 +14,11 @@ function Step6TTS() {
   const ttsVoice = useProjectStore((s) => s.ttsVoice);
   const jobId = useProjectStore((s) => s.jobId);
   const setProgress = useProjectStore((s) => s.setProgress);
+  const ttsGenerated = useProjectStore((s) => s.ttsGenerated);
+  const setTtsGenerated = useProjectStore((s) => s.setTtsGenerated);
 
   const [speed, setSpeed] = useState(1.0);
   const [generating, setGenerating] = useState(false);
-  const [generated, setGenerated] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
   const [playingIdx, setPlayingIdx] = useState(null);
   const videoRef = useRef(null);
@@ -30,15 +33,15 @@ function Step6TTS() {
   }, [jobId, generating]);
 
   const handleGenerate = async () => {
-    if (!jobId) return alert('Chưa có Job ID!');
+    if (!jobId) return toast.error('Chưa có Job ID!');
     setGenerating(true);
     setProgressValue(0);
     try {
       await api.runTTS(jobId);
-      setGenerated(true);
-      setProgress(100, 'Tạo TTS hoàn tất');
+      setTtsGenerated(true);
+      toast.success('Tạo TTS hoàn tất');
     } catch (e) {
-      alert('Lỗi tạo TTS: ' + e.message);
+      toast.error('Lỗi tạo TTS: ' + e.message);
     } finally {
       setGenerating(false);
     }
@@ -65,16 +68,16 @@ function Step6TTS() {
 
       <div className="panel-tools">
         <div className="panel-tools-header">
-          <span className="panel-tools-title">🗣️ Lồng tiếng &amp; Mixer</span>
+          <span className="panel-tools-title"><Mic2 size={20} className="text-purple-400" /> Lồng tiếng &amp; Mixer</span>
         </div>
         <div className="panel-tools-body">
           {/* Audio Mixer */}
-          <div className="section-title">🎚️ Audio Mixer</div>
+          <div className="section-title"><Sliders size={16} /> Audio Mixer</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' }}>
             {/* Dubbed voice channel */}
             <div className="mixer-channel">
               <div className="mixer-channel-header">
-                <span className="mixer-channel-label">🗣️ Giọng lồng tiếng</span>
+                <span className="mixer-channel-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Mic2 size={14} /> Giọng lồng tiếng</span>
                 <span className="mixer-channel-value">{audioMix.dubbed}%</span>
               </div>
               <div className="slider-container">
@@ -92,7 +95,7 @@ function Step6TTS() {
             {/* Original audio channel */}
             <div className="mixer-channel">
               <div className="mixer-channel-header">
-                <span className="mixer-channel-label">🎬 Audio gốc</span>
+                <span className="mixer-channel-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clapperboard size={14} /> Audio gốc</span>
                 <span className="mixer-channel-value">{audioMix.original}%</span>
               </div>
               <div className="slider-container">
@@ -110,7 +113,7 @@ function Step6TTS() {
             {/* BGM channel */}
             <div className="mixer-channel">
               <div className="mixer-channel-header">
-                <span className="mixer-channel-label">🎵 Nhạc nền</span>
+                <span className="mixer-channel-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Music size={14} /> Nhạc nền</span>
                 <span className="mixer-channel-value">{audioMix.bgm}%</span>
               </div>
               <div className="slider-container">
@@ -123,8 +126,8 @@ function Step6TTS() {
                   onChange={(e) => setAudioMix({ bgm: parseInt(e.target.value) })}
                 />
               </div>
-              <button className="btn btn-ghost btn-sm" onClick={() => bgmInputRef.current?.click()}>
-                📁 Tải nhạc nền
+              <button className="btn btn-ghost btn-sm" onClick={() => bgmInputRef.current?.click()} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <Upload size={14} /> Tải nhạc nền
               </button>
               <input
                 ref={bgmInputRef}
@@ -139,7 +142,7 @@ function Step6TTS() {
           <div className="section-divider" />
 
           {/* TTS Settings */}
-          <div className="section-title">⚙️ Cài đặt TTS</div>
+          <div className="section-title"><Settings size={16} /> Cài đặt TTS</div>
           <div className="field-group">
             <label className="label">Giọng đọc</label>
             <div style={{
@@ -148,8 +151,11 @@ function Step6TTS() {
               borderRadius: 'var(--radius-md)',
               border: '1px solid var(--border-subtle)',
               fontSize: 'var(--font-md)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}>
-              🗣️ {voiceDisplay}
+              <Volume2 size={16} className="text-purple-400" /> {voiceDisplay}
             </div>
           </div>
 
@@ -186,7 +192,7 @@ function Step6TTS() {
           <div className="section-divider" />
 
           {/* Segment list */}
-          <div className="section-title">📋 Danh sách đoạn <span className="badge badge-info">{segments.length}</span></div>
+          <div className="section-title"><List size={16} /> Danh sách đoạn <span className="badge badge-info">{segments.length}</span></div>
           <div className="tts-segment-list" style={{ maxHeight: 200, overflowY: 'auto', marginBottom: 'var(--space-md)' }}>
             {segments.map((seg) => (
               <div
@@ -200,7 +206,7 @@ function Step6TTS() {
                   className="btn btn-ghost btn-sm"
                   style={{ padding: '2px 8px' }}
                 >
-                  {playingIdx === seg.id ? '⏸' : '▶'}
+                  {playingIdx === seg.id ? <Pause size={14} /> : <Play size={14} />}
                 </button>
               </div>
             ))}
@@ -223,16 +229,16 @@ function Step6TTS() {
                   <div className="progress-bar-fill" style={{ width: `${progressValue}%` }} />
                 </div>
               </div>
-            ) : generated ? (
-              '✅ Tạo lại TTS'
+            ) : ttsGenerated ? (
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><RefreshCw size={18} /> Tạo lại TTS</span>
             ) : (
-              '🗣️ Tạo TTS'
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Mic2 size={18} /> Tạo TTS</span>
             )}
           </button>
 
-          {generated && (
-            <div style={{ textAlign: 'center', marginTop: 'var(--space-sm)', color: 'var(--success)', fontSize: 'var(--font-sm)' }}>
-              ✅ Đã tạo {segments.length} file âm thanh TTS
+          {ttsGenerated && (
+            <div style={{ textAlign: 'center', marginTop: 'var(--space-sm)', color: 'var(--success)', fontSize: 'var(--font-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+              <CheckCircle2 size={14} /> Đã tạo {segments.length} file âm thanh TTS
             </div>
           )}
         </div>

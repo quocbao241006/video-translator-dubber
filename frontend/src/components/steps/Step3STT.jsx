@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import useProjectStore from '../../store/projectStore';
 import api from '../../services/api';
+import toast from 'react-hot-toast';
+import { Mic2, Download, RefreshCw, CheckCircle2, Circle, Clock, Loader2, Play } from 'lucide-react';
 
 const formatTime = (s) => {
   const m = Math.floor(s / 60);
@@ -52,7 +54,7 @@ function Step3STT() {
   }, [jobId, processing]);
 
   const startProcessing = async () => {
-    if (!jobId) return alert('Chưa upload video!');
+    if (!jobId) return toast.error('Chưa upload video!');
     setProcessing(true);
     setDone(false);
     setCurrentStage(0);
@@ -71,7 +73,7 @@ function Step3STT() {
       setDone(true);
       setProgress(100, 'Hoàn tất');
     } catch (e) {
-      alert('Lỗi xử lý: ' + e.message);
+      toast.error('Lỗi xử lý: ' + e.message);
       setStageStatuses(['error', 'error', 'error']);
     } finally {
       setProcessing(false);
@@ -113,13 +115,13 @@ function Step3STT() {
 
       {!processing && !done && (
         <div className="processing-status animate-fade-in">
-          <div style={{ fontSize: '48px', marginBottom: 'var(--space-md)' }}>🎙️</div>
+          <Mic2 size={48} className="text-purple-400 mb-4 opacity-80" />
           <div className="processing-text">Sẵn sàng tách và nhận dạng giọng nói</div>
           <div className="processing-detail">
             Hệ thống sẽ tách audio, phân tách vocal và nhận dạng tiếng Trung
           </div>
           <button className="btn btn-primary btn-lg" onClick={startProcessing} style={{ marginTop: 'var(--space-lg)' }}>
-            🎙️ Bắt đầu xử lý
+            <Play size={18} /> Bắt đầu xử lý
           </button>
         </div>
       )}
@@ -145,7 +147,7 @@ function Step3STT() {
                 className={`processing-stage ${stageStatuses[i] === 'active' ? 'active' : ''} ${stageStatuses[i] === 'done' ? 'done' : ''}`}
               >
                 <span>
-                  {stageStatuses[i] === 'done' ? '✅' : stageStatuses[i] === 'active' ? '⏳' : '⬜'}
+                  {stageStatuses[i] === 'done' ? <CheckCircle2 size={16} className="text-success" /> : stageStatuses[i] === 'active' ? <Loader2 size={16} className="text-purple-400 animate-spin" /> : <Circle size={16} className="text-muted" />}
                 </span>
                 <span>{stage.label}</span>
               </div>
@@ -156,7 +158,7 @@ function Step3STT() {
 
       {done && !processing && (
         <div className="processing-status animate-fade-in">
-          <div style={{ fontSize: '48px', marginBottom: 'var(--space-sm)' }}>✅</div>
+          <CheckCircle2 size={48} className="text-success mb-4" />
           <div className="processing-text" style={{ color: 'var(--success)' }}>Nhận dạng hoàn tất!</div>
 
           <div className="result-stats">
@@ -178,10 +180,10 @@ function Step3STT() {
 
           <div style={{ display: 'flex', gap: 'var(--space-md)', marginTop: 'var(--space-md)' }}>
             <button className="btn btn-secondary" onClick={generateSRT}>
-              📥 Tải SRT
+              <Download size={16} /> Tải SRT
             </button>
             <button className="btn btn-primary" onClick={startProcessing}>
-              🔄 Xử lý lại
+              <RefreshCw size={16} /> Xử lý lại
             </button>
           </div>
         </div>

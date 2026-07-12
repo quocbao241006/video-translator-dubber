@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { AnimatePresence, motion } from 'framer-motion';
 import './App.css';
 import useProjectStore from './store/projectStore';
 import api from './services/api';
@@ -39,9 +41,28 @@ function App() {
     <div className="app">
       <AppHeader />
       <main className="app-content">
-        <div className="step-content" key={currentStep}>
-          <StepComponent />
-        </div>
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            style: {
+              background: 'var(--bg-elevated)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border-subtle)',
+            },
+          }}
+        />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            className="step-content"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <StepComponent />
+          </motion.div>
+        </AnimatePresence>
       </main>
       <BottomBar />
     </div>

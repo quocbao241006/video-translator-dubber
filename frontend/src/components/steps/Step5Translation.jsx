@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import useProjectStore from '../../store/projectStore';
 import api from '../../services/api';
 import VideoPlayer from '../video/VideoPlayer';
+import toast from 'react-hot-toast';
+import { Copy, Sparkles, BookOpen, BarChart2, Plus, X, Globe2 } from 'lucide-react';
 
 
 
@@ -67,16 +69,16 @@ Bạn PHẢI trả về ĐÚNG MỘT JSON OBJECT theo định dạng sau:
 CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
 
     navigator.clipboard.writeText(prompt).then(() => {
-      alert('Đã copy Prompt! Hãy mang sang dán vào ChatGPT hoặc Claude.');
+      toast.success('Đã copy Prompt! Hãy mang sang dán vào ChatGPT hoặc Claude.');
     }).catch(err => {
       console.error('Lỗi khi copy:', err);
-      alert('Không thể copy tự động. Hãy thử lại.');
+      toast.error('Không thể copy tự động. Hãy thử lại.');
     });
   };
 
   const handleApplyAiResult = () => {
     if (!aiResult.trim()) {
-      return alert('Vui lòng dán kết quả JSON từ AI vào ô trống.');
+      return toast.error('Vui lòng dán kết quả JSON từ AI vào ô trống.');
     }
 
     try {
@@ -107,9 +109,9 @@ CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
       setTranslated(true);
       setProgress(100, 'Dịch thủ công hoàn tất');
       setAiResult('');
-      alert('Đã cập nhật phụ đề thành công!');
+      toast.success('Đã cập nhật phụ đề thành công!');
     } catch (e) {
-      alert('Lỗi khi đọc JSON từ AI: ' + e.message);
+      toast.error('Lỗi khi đọc JSON từ AI: ' + e.message);
     }
   };
 
@@ -147,11 +149,11 @@ CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
 
       <div className="panel-tools">
         <div className="panel-tools-header">
-          <span className="panel-tools-title">🌐 Dịch thuật</span>
+          <span className="panel-tools-title"><Globe2 size={20} className="text-purple-400" /> Dịch thuật</span>
         </div>
         <div className="panel-tools-body">
           {/* Glossary Section */}
-          <div className="section-title">📖 Bảng thuật ngữ <span className="badge badge-info">{glossary.length}</span></div>
+          <div className="section-title"><BookOpen size={16} /> Bảng thuật ngữ <span className="badge badge-info">{glossary.length}</span></div>
           <div className="glossary-list" style={{ marginBottom: 'var(--space-md)' }}>
             {glossary.map((term, i) => (
               <div key={i} className="glossary-item">
@@ -159,7 +161,7 @@ CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
                 <span className="glossary-item-arrow">→</span>
                 <span className="glossary-item-vi">{term.vi}</span>
                 <button className="btn btn-ghost btn-sm" onClick={() => removeGlossaryTerm(i)} style={{ padding: '2px 6px' }}>
-                  ✕
+                  <X size={14} />
                 </button>
               </div>
             ))}
@@ -178,14 +180,14 @@ CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
               onChange={(e) => setNewVi(e.target.value)}
             />
             <button className="btn btn-secondary btn-sm" onClick={handleAddGlossary}>
-              Thêm
+              <Plus size={14} /> Thêm
             </button>
           </div>
 
           <div className="section-divider" />
 
           {/* Stats */}
-          <div className="section-title">📊 Thống kê</div>
+          <div className="section-title"><BarChart2 size={16} /> Thống kê</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' }}>
             <div className="upload-meta-item">
               <div className="upload-meta-label">Tổng đoạn</div>
@@ -221,7 +223,7 @@ CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
                 disabled={segments.length === 0}
                 style={{ width: '100%', display: 'flex', justifyContent: 'center', gap: '8px' }}
               >
-                <span>📋</span> Copy Prompt kèm Phụ đề
+                <Copy size={16} /> Copy Prompt kèm Phụ đề
               </button>
             </div>
 
@@ -243,7 +245,7 @@ CHỈ trả về JSON object, không có bất kỳ văn bản nào khác.`;
                 disabled={!aiResult.trim()}
                 style={{ width: '100%' }}
               >
-                ✨ Cập nhật Phụ đề
+                <Sparkles size={16} /> Cập nhật Phụ đề
               </button>
             </div>
           </div>

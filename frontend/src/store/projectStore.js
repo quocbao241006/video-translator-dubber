@@ -39,6 +39,7 @@ const useProjectStore = create(
   ttsVoice: 'vi-VN-HoaiMyNeural',
   translationQuality: 'quality',
   genre: 'animation',
+  ttsGenerated: false,
 
   // Audio mix
   audioMix: { original: 15, dubbed: 85, bgm: 40 },
@@ -108,18 +109,20 @@ const useProjectStore = create(
     set((s) => ({ subtitleZone: { ...s.subtitleZone, ...updates } })),
 
   // Segments
-  setSegments: (segments) => set({ segments }),
+  setSegments: (segments) => set({ segments, ttsGenerated: false }),
   updateSegment: (id, updates) =>
     set((s) => ({
       segments: s.segments.map((seg) =>
         seg.id === id ? { ...seg, ...updates } : seg
       ),
+      ttsGenerated: false,
     })),
   deleteSegment: (id) =>
     set((s) => ({
       segments: s.segments
         .filter((seg) => seg.id !== id)
         .map((seg, i) => ({ ...seg, index: i + 1 })),
+      ttsGenerated: false,
     })),
   addSegment: (segment) =>
     set((s) => {
@@ -135,7 +138,7 @@ const useProjectStore = create(
           ...segment,
         },
       ].sort((a, b) => a.start - b.start);
-      return { segments: newSegs.map((seg, i) => ({ ...seg, index: i + 1 })) };
+      return { segments: newSegs.map((seg, i) => ({ ...seg, index: i + 1 })), ttsGenerated: false };
     }),
   splitSegment: (id, splitTime) =>
     set((s) => {
@@ -152,7 +155,7 @@ const useProjectStore = create(
         text_vi: seg.text_vi,
       };
       const newSegs = [...s.segments.slice(0, idx), seg1, seg2, ...s.segments.slice(idx + 1)];
-      return { segments: newSegs.map((s2, i) => ({ ...s2, index: i + 1 })) };
+      return { segments: newSegs.map((s2, i) => ({ ...s2, index: i + 1 })), ttsGenerated: false };
     }),
   mergeSegments: (ids) =>
     set((s) => {
@@ -169,7 +172,7 @@ const useProjectStore = create(
       };
       const remaining = s.segments.filter((seg) => !ids.includes(seg.id));
       const newSegs = [...remaining, merged].sort((a, b) => a.start - b.start);
-      return { segments: newSegs.map((s2, i) => ({ ...s2, index: i + 1 })) };
+      return { segments: newSegs.map((s2, i) => ({ ...s2, index: i + 1 })), ttsGenerated: false };
     }),
 
   // Audio
@@ -184,6 +187,7 @@ const useProjectStore = create(
   setJobStatus: (status) => set({ jobStatus: status }),
   setProgress: (progress, text) =>
     set({ progress, ...(text !== undefined && { progressText: text }) }),
+  setTtsGenerated: (val) => set({ ttsGenerated: val }),
 
   // Glossary
   addGlossaryTerm: (term) =>
@@ -204,6 +208,7 @@ const useProjectStore = create(
       ttsVoice: 'vi-VN-HoaiMyNeural',
       translationQuality: 'quality',
       genre: 'animation',
+      ttsGenerated: false,
       audioMix: { original: 15, dubbed: 85, bgm: 40 },
       bgmFile: null,
       bgmUrl: null,

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import useProjectStore from '../../store/projectStore';
+import toast from 'react-hot-toast';
+import { ArrowLeft, ArrowRight, CheckCircle2, Film } from 'lucide-react';
 
 const formatTime = (s) => {
   const m = Math.floor(s / 60);
@@ -22,7 +24,7 @@ function BottomBar() {
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      if (!videoFile) return alert("Vui lòng chọn video!");
+      if (!videoFile) return toast.error("Vui lòng chọn video!");
       if (!jobId) {
         try {
           setLoading(true);
@@ -30,7 +32,7 @@ function BottomBar() {
           const res = await api.uploadVideo(videoFile, { ttsVoice, translationQuality, genre });
           useProjectStore.setState({ jobId: res.job_id, jobStatus: 'uploaded' });
         } catch (e) {
-          alert("Lỗi upload: " + e.message);
+          toast.error("Lỗi upload: " + e.message);
           return;
         } finally {
           setLoading(false);
@@ -45,7 +47,7 @@ function BottomBar() {
           await api.saveBlurZones(jobId, state.blurZones);
           await api.saveSubtitleZone(jobId, state.subtitleZone);
         } catch (e) {
-          alert("Lỗi lưu cấu hình: " + e.message);
+          toast.error("Lỗi lưu cấu hình: " + e.message);
           return;
         } finally {
           setLoading(false);
@@ -59,11 +61,15 @@ function BottomBar() {
           const state = useProjectStore.getState();
           await api.updateSRT(jobId, state.segments);
         } catch (e) {
-          alert("Lỗi lưu phụ đề: " + e.message);
+          toast.error("Lỗi lưu phụ đề: " + e.message);
           return;
         } finally {
           setLoading(false);
         }
+      }
+    } else if (currentStep === 6) {
+      if (!useProjectStore.getState().ttsGenerated) {
+        return toast.error("Vui lòng Bấm tạo TTS trước khi tiếp tục!");
       }
     }
     nextStep();
@@ -73,8 +79,8 @@ function BottomBar() {
     <div className="bottom-bar">
       <div className="bottom-bar-left">
         {videoMetadata.filename && (
-          <span className="bottom-bar-info">
-            🎬 {videoMetadata.filename}
+          <span className="bottom-bar-info" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Film size={16} className="text-purple-400" /> {videoMetadata.filename}
             {videoMetadata.duration > 0 && ` • ${formatTime(videoMetadata.duration)}`}
           </span>
         )}
@@ -86,15 +92,17 @@ function BottomBar() {
           onClick={prevStep}
           disabled={currentStep === 1}
         >
-          ← Quay lại
+          <ArrowLeft size={16} /> Quay lại
         </button>
         {currentStep === 7 ? (
           <button className="btn btn-primary btn-lg" onClick={() => {}}>
-            🎬 Xuất Video
+            <CheckCircle2 size={18} /> Hoàn tất
           </button>
         ) : (
           <button className="btn btn-success" onClick={handleNext} disabled={loading}>
-            {loading ? 'Đang xử lý...' : 'Xác nhận & Tiếp tục →'}
+            {loading ? 'Đang xử lý...' : (
+              <>Xác nhận & Tiếp tục <ArrowRight size={16} /></>
+            )}
           </button>
         )}
       </div>

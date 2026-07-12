@@ -9,9 +9,13 @@ from pydub.silence import detect_nonsilent
 
 async def generate_tts(text: str, voice: str, output_path: str) -> str:
     """Generate TTS audio for a single text segment."""
-    communicate = edge_tts.Communicate(text, voice)
-    await communicate.save(output_path)
-    return output_path
+    try:
+        communicate = edge_tts.Communicate(text, voice)
+        await communicate.save(output_path)
+        return output_path
+    except Exception as e:
+        print(f"Error generating TTS for text '{text}': {e}")
+        raise
 
 
 def process_audio_sync(raw_path: str, final_path: str, target_duration: float):
@@ -62,20 +66,25 @@ def process_audio_sync(raw_path: str, final_path: str, target_duration: float):
 async def process_single_segment(seg: dict, voice: str, output_dir: str, semaphore: asyncio.Semaphore) -> dict:
     """Process a single TTS segment concurrently."""
     async with semaphore:
-        if not seg.get('text_vi'):
+        text_vi = seg.get('text_vi', '').strip()
+        if not text_vi:
             return None
 
         target_duration = seg['end'] - seg['start']
         raw_path = os.path.join(output_dir, f"seg_{seg['id']:04d}_raw.mp3")
         final_path = os.path.join(output_dir, f"seg_{seg['id']:04d}.mp3")
 
-        # Generate TTS (Network IO)
-        await generate_tts(seg['text_vi'], voice, raw_path)
+        try:
+            # Generate TTS (Network IO)
+            await generate_tts(text_vi, voice, raw_path)
 
-        # Process Audio (CPU/Disk IO)
-        await asyncio.to_thread(process_audio_sync, raw_path, final_path, target_duration)
+            # Process Audio (CPU/Disk IO)
+            await asyncio.to_thread(process_audio_sync, raw_path, final_path, target_duration)
 
-        return {'segment_id': seg['id'], 'path': final_path}
+            return {'segment_id': seg['id'], 'path': final_path}
+        except Exception as e:
+            print(f"Failed to process segment {seg['id']}: {e}")
+            return None
 
 
 def combine_audio_segments(segments: list, output_dir: str):

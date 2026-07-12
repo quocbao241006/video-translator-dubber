@@ -1,4 +1,5 @@
-const API_BASE = 'http://localhost:8000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = `${API_URL}/api/v1`;
 
 class ApiService {
   // ========================
@@ -155,7 +156,8 @@ class ApiService {
   // ========================
 
   connectProgress(jobId, onProgress) {
-    const ws = new WebSocket(`ws://localhost:8000/ws/progress/${jobId}`);
+    const wsUrl = API_URL.replace(/^http/, 'ws') + `/ws/progress/${jobId}`;
+    const ws = new WebSocket(wsUrl);
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
