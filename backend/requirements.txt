@@ -1,0 +1,11 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+aiofiles==24.1.0
+pydub==0.25.1
+pysrt==1.1.2
+edge-tts>=6.1.19
+groq>=0.15.0
+google-genai>=1.14.0
+websockets>=14.2
+python-dotenv>=1.1.0

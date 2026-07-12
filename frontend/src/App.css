@@ -1,0 +1,320 @@
+/* Override Vite defaults - all styles are in index.css design system */
+
+/* Step content transition */
+.step-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Upload page two-column layout */
+.upload-page {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  overflow-y: auto;
+}
+
+.upload-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.upload-preview {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+}
+
+.upload-preview video {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  background: #000;
+}
+
+.upload-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+
+.upload-meta-item {
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.upload-meta-label {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.upload-meta-value {
+  font-size: var(--font-md);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Config panel */
+.config-panel {
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* Step 3 center layout */
+.step-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  gap: var(--space-lg);
+  overflow-y: auto;
+}
+
+.step-center-video {
+  width: 400px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+}
+
+.step-center-video video {
+  width: 100%;
+  display: block;
+}
+
+/* Processing stages */
+.processing-stages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  width: 100%;
+  max-width: 400px;
+}
+
+.processing-stage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-md);
+  color: var(--text-muted);
+  transition: all var(--transition-normal);
+}
+
+.processing-stage.active {
+  color: var(--purple-400);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.processing-stage.done {
+  color: var(--success);
+}
+
+/* Results stats */
+.result-stats {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.result-stat {
+  text-align: center;
+}
+
+.result-stat-value {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--purple-400);
+}
+
+.result-stat-label {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+/* Translation table */
+.translation-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.translation-table th {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.translation-table td {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+}
+
+.translation-table tr:hover td {
+  background: rgba(139, 92, 246, 0.03);
+}
+
+.warning-icon {
+  color: var(--warning);
+  font-size: var(--font-sm);
+}
+
+/* Glossary */
+.glossary-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.glossary-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
+}
+
+.glossary-item-zh {
+  color: var(--text-muted);
+  min-width: 50px;
+}
+
+.glossary-item-arrow {
+  color: var(--purple-400);
+}
+
+.glossary-item-vi {
+  color: var(--text-primary);
+  flex: 1;
+}
+
+/* Glossary add row */
+.glossary-add {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.glossary-add .input {
+  width: auto;
+  flex: 1;
+}
+
+/* Export downloads */
+.download-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.download-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.download-item-icon {
+  font-size: 24px;
+}
+
+.download-item-info {
+  flex: 1;
+}
+
+.download-item-name {
+  font-size: var(--font-md);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.download-item-size {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+/* Subtitle preview */
+.subtitle-preview-box {
+  padding: var(--space-md);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+/* Blur zone inputs row */
+.blur-zone-inputs {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.blur-zone-inputs .input {
+  width: 60px;
+  padding: 4px 6px;
+  font-size: var(--font-xs);
+  text-align: center;
+}
+
+/* TTS segment list */
+.tts-segment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.tts-segment-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tts-segment-item:hover {
+  border-color: var(--border-hover);
+}
+
+.tts-segment-item-index {
+  color: var(--purple-400);
+  font-weight: 700;
+  min-width: 24px;
+}
+
+.tts-segment-item-text {
+  flex: 1;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
